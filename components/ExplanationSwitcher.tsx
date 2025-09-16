@@ -1,64 +1,50 @@
-'use client';
+'"use client";
+import React, { useState } from "react";
 
-import { useState } from 'react';
-import { RotateCcw, BookOpen } from 'lucide-react';
+type Mode = "analogy" | "picture" | "steps" | "story" | "table" | "cli";
+export interface Explanation {
+  mode: Mode;
+  text: string;
+}
 
-interface ExplanationSwitcherProps {
-  explanations: {
-    mode: 'analogy' | 'picture' | 'steps' | 'story' | 'table' | 'cli';
-    text: string;
-  }[];
+interface Props {
+  explanations?: Explanation[];         // optional
   initialRationale: string;
 }
 
-export default function ExplanationSwitcher({ explanations, initialRationale }: ExplanationSwitcherProps) {
-  const [currentMode, setCurrentMode] = useState<string>('rationale');
+const btnBase =
+  "inline-flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition border";
+const btnSecondary =
+  `${btnBase} bg-slate-800 hover:bg-slate-700 text-slate-100 border-slate-600`;
 
-  const allExplanations = [
-    { mode: 'rationale', text: initialRationale },
-    ...explanations
-  ];
+export default function ExplanationSwitcher({ explanations, initialRationale }: Props) {
+  const exps = Array.isArray(explanations) ? explanations : [];
 
-  const nextMode = () => {
-    const currentIndex = allExplanations.findIndex(exp => exp.mode === currentMode);
-    const nextIndex = (currentIndex + 1) % allExplanations.length;
-    setCurrentMode(allExplanations[nextIndex].mode);
-  };
+  // If there are no alternates, render nothing (rationale already shown above)
+  if (exps.length === 0) return null;
 
-  const getModeLabel = (mode: string) => {
-    switch (mode) {
-      case 'rationale': return 'Standard';
-      case 'analogy': return 'Analogy';
-      case 'picture': return 'Visual';
-      case 'steps': return 'Step-by-step';
-      case 'story': return 'Story';
-      case 'table': return 'Summary';
-      case 'cli': return 'Technical';
-      default: return 'Unknown';
-    }
-  };
-
-  const currentExplanation = allExplanations.find(exp => exp.mode === currentMode);
+  const [i, setI] = useState(0);
+  const current = exps[i % exps.length];
 
   return (
-    <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 mt-4">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center space-x-2">
-          <BookOpen className="w-4 h-4 text-cyan-400" />
-          <span className="text-sm font-medium text-slate-200">
-            Explanation: {getModeLabel(currentMode)}
-          </span>
-        </div>
+    <div className="rounded-lg border border-slate-700 bg-slate-800 p-4 mt-4">
+      <div className="flex items-center justify-between">
+        <p className="text-slate-300 text-sm">
+          Alternate explanation ({current.mode})
+        </p>
         <button
-          onClick={nextMode}
-          className="flex items-center space-x-2 px-3 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 rounded-lg text-cyan-400 text-sm transition-colors"
+          type="button"
+          onClick={() => setI((x) => x + 1)}
+          className={btnSecondary}
         >
-          <RotateCcw className="w-3 h-3" />
-          <span>Explain differently</span>
+          Explain differently
         </button>
       </div>
-      <p className="text-slate-300 text-sm leading-relaxed">
-        {currentExplanation?.text || initialRationale}
+      <p className="text-slate-100 mt-2 whitespace-pre-wrap">{current.text}</p>
+
+      {/* Optional: show the original rationale as a small note */}
+      <p className="text-slate-400 text-xs mt-3">
+        Original rationale: {initialRationale}
       </p>
     </div>
   );
