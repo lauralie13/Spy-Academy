@@ -1,12 +1,12 @@
 // lib/content.ts
-// Loads content from JSON and returns strongly-typed objects,
-// coercing objective.status to the allowed union so TS is happy.
+// Strongly-typed loaders for our JSON content.
+// We coerce/validate "status" so it matches the union type.
 
 import objectivesJson from "@/data/objectives.json";
 import questionsJson from "@/data/questions.json";
 import missionsJson from "@/data/missions.json";
 
-// ---- Types (keep in sync with your store if you have duplicates) ----
+// ---- Types (exported so components can import) ----
 export type Status = "unseen" | "learning" | "mastered";
 
 export interface Objective {
@@ -44,26 +44,26 @@ export interface Mission {
 
 // ---- Coercion helpers ----
 const STATUS_SET = new Set<Status>(["unseen", "learning", "mastered"]);
-
-type RawObjective = Omit<Objective, "status"> & { status: string };
+type RawObjective = Omit<Objective, "status"> & { status: string | undefined };
 
 function coerceObjective(raw: RawObjective): Objective {
-  const status = STATUS_SET.has(raw.status as Status) ? (raw.status as Status) : "unseen";
+  const status = STATUS_SET.has((raw.status ?? "").toLowerCase() as Status)
+    ? ((raw.status ?? "").toLowerCase() as Status)
+    : "unseen";
   return {
     ...raw,
     status,
-    nextDue: raw.nextDue ?? "", // tolerate missing field
+    nextDue: raw.nextDue ?? "",
     mastery: raw.mastery ?? 0,
   };
 }
 
+// ---- Load + coerce + type the arrays ----
+const objectives: Objective[] = ((objectivesJson as unknown) as RawObjective[]).map(coerceObjective);
+const questions: Question[] = (questionsJson as unknown) as Question[];
+const missions: Mission[] = (missionsJson as unknown) as Mission[];
+
 // ---- Exported getters ----
-const rawObjectives = objectivesJson as unknown as RawObjective[];
-const objectives: Objective[] = rawObjectives.map(coerceObjective);
-
-const questions = questionsJson as unknown as Question[];
-const missions = missionsJson as unknown as Mission[];
-
 export const getObjectives = (): Objective[] => objectives;
 export const getQuestions = (): Question[] => questions;
 export const getMissions = (): Mission[] => missions;
