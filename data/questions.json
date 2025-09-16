@@ -1,0 +1,242 @@
+[
+  {
+    "id":"Q1","objectiveId":"GEN-101","domain":"General Security Concepts",
+    "stem":"Which option best describes the CIA triad?",
+    "options":["Confidentiality, Integrity, Availability","Controls, Identification, Authorization","Confidentiality, Identification, Accounting","Compliance, Integrity, Audit"],
+    "answerIndex":0,
+    "rationale":"Security balances protecting data (C), preventing unauthorized changes (I), and ensuring it's usable when needed (A).",
+    "altExplanations":[
+      {"mode":"analogy","text":"Think of a bank: vault doors (C), tamper seals (I), and open hours/generators (A)."},
+      {"mode":"picture","text":"Picture three pillars holding a roof labeled 'Security': C, I, and A. If any collapses, the roof tilts."},
+      {"mode":"steps","text":"1) Hide data from the wrong people. 2) Keep data correct. 3) Keep systems up."},
+      {"mode":"story","text":"An analyst blocks a snoop (C), spots a silent edit (I), and keeps the portal up during a storm (A)."},
+      {"mode":"table","text":"C=privacy; I=accuracy; A=uptime"},
+      {"mode":"cli","text":"No command—conceptual. See 'chmod' later for controlling C at file level."}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q2","objectiveId":"IAM-210","domain":"Identity & Access",
+    "stem":"MFA primarily strengthens which part of IAM?",
+    "options":["Authorization","Authentication","Accounting","Availability"],
+    "answerIndex":1,
+    "rationale":"MFA verifies you are who you claim to be (Authentication) using multiple factors.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Door guard asks for your face + a one-time code. Two locks on identity."},
+      {"mode":"picture","text":"A login ladder: Username→Password→Phone code. MFA adds rungs to prove identity."},
+      {"mode":"steps","text":"1) Prove identity (AuthN). 2) Decide permissions (AuthZ). 3) Track actions (Accounting)."},
+      {"mode":"story","text":"An attacker steals a password, but fails the phone prompt; AuthN blocks them."},
+      {"mode":"table","text":"AuthN=who you are; AuthZ=what you can do; Accounting=logs."},
+      {"mode":"cli","text":"No CLI; concept."}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q3","objectiveId":"ARC-201","domain":"Security Architecture",
+    "stem":"Where should a public web server usually live?",
+    "options":["Internal network","Restricted zone","DMZ","Admin segment"],
+    "answerIndex":2,
+    "rationale":"Place internet-facing systems in a DMZ to limit blast radius.",
+    "altExplanations":[
+      {"mode":"analogy","text":"A lobby between street and vault—the DMZ buffers strangers from the safe."},
+      {"mode":"picture","text":"Internet → FW → DMZ (web) → FW → Internal (DB)."},
+      {"mode":"steps","text":"1) Expose minimal services in DMZ. 2) Filter traffic both directions. 3) Keep DB internal."},
+      {"mode":"story","text":"Attack hits web server; firewalls contain it inside the lobby."},
+      {"mode":"table","text":"Zone purpose: Public=access; DMZ=buffer; Internal=work; Restricted=crown jewels."},
+      {"mode":"cli","text":"N/A"}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q4","objectiveId":"OPS-320","domain":"Security Operations",
+    "stem":"You see many 'Failed password' entries in SSH logs from one IP. What's the BEST immediate control?",
+    "options":["Disable SSH permanently","Set account lockout/deny-hosts and require keys","Wipe the server","Ignore if CPU is fine"],
+    "answerIndex":1,
+    "rationale":"Rate limiting/lockout and stronger auth stop brute force without killing operations.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Someone keeps rattling the doorknob; add a smart lock and shorter tries."},
+      {"mode":"picture","text":"Login attempts spike → control clamps retries → attacker blocked."},
+      {"mode":"steps","text":"1) Identify pattern. 2) Limit retries. 3) Require keys. 4) Monitor."},
+      {"mode":"story","text":"SOC adds denyhosts; attempts drop; tickets quiet down."},
+      {"mode":"table","text":"Control types: Preventive (lockout), Detective (logs), Corrective (rotate keys)."},
+      {"mode":"cli","text":"Concept only in MVP."}
+    ],
+    "difficulty":2
+  },
+  {
+    "id":"Q5","objectiveId":"CRY-150","domain":"Cryptography",
+    "stem":"Which statement about hashing is TRUE?",
+    "options":["It can be reversed with the key","It detects changes to data","It hides data contents like encryption","It is identical to encoding"],
+    "answerIndex":1,
+    "rationale":"Hashes are one-way fingerprints; small changes alter the hash.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Like a unique crumb pattern—if the cookie changes, so does the pattern."},
+      {"mode":"picture","text":"File → Hash → Short string; edit one bit → totally different string."},
+      {"mode":"steps","text":"1) Input any size. 2) Output fixed length. 3) One-way. 4) Change detection."},
+      {"mode":"story","text":"Backup job compares hashes; finds a tampered file."},
+      {"mode":"table","text":"Hash=integrity; Encryption=confidentiality; Encoding=compatibility."},
+      {"mode":"cli","text":"Later we'll show 'shasum' conceptually."}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q6","objectiveId":"GRC-110","domain":"GRC",
+    "stem":"Policies vs standards vs procedures—pick the BEST mapping.",
+    "options":["Policy=how-to steps; Standard=vision; Procedure=optional","Policy=high-level intent; Standard=specific requirements; Procedure=step-by-step tasks","All three are the same","Policy and procedure mean the same thing"],
+    "answerIndex":1,
+    "rationale":"Policy states intent, standards set measurable requirements, and procedures give the steps.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Company law (policy), building code (standard), construction checklist (procedure)."},
+      {"mode":"picture","text":"Pyramid: Policy (top), Standards (middle), Procedures (base)."},
+      {"mode":"steps","text":"1) Decide intent. 2) Set required controls. 3) Document how-to."},
+      {"mode":"story","text":"Audit fails until team writes standards to enforce policy."},
+      {"mode":"table","text":"Policy=Why; Standards=What; Procedure=How."},
+      {"mode":"cli","text":"N/A"}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q7","objectiveId":"GEN-101","domain":"General Security Concepts",
+    "stem":"Risk is best defined as:",
+    "options":["Threat × Vulnerability × Asset Value","Only the likelihood of an attack","The cost of security controls","Compliance requirements"],
+    "answerIndex":0,
+    "rationale":"Risk combines threat likelihood, vulnerability existence, and asset value to determine potential impact.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Like car insurance: bad weather (threat) + old tires (vulnerability) + expensive car (asset) = high risk."},
+      {"mode":"picture","text":"Three overlapping circles: Threat, Vulnerability, Asset. Risk exists where all three meet."},
+      {"mode":"steps","text":"1) Identify threats. 2) Find vulnerabilities. 3) Assess asset value. 4) Calculate risk."},
+      {"mode":"story","text":"Analyst sees APT interest (threat) in unpatched server (vuln) holding customer data (asset)."},
+      {"mode":"table","text":"Risk = Threat probability × Vulnerability severity × Asset value"},
+      {"mode":"cli","text":"Conceptual framework for risk assessment."}
+    ],
+    "difficulty":2
+  },
+  {
+    "id":"Q8","objectiveId":"IAM-210","domain":"Identity & Access",
+    "stem":"What does the principle of least privilege mean?",
+    "options":["Give maximum access to all users","Give minimum required access for job function","Restrict all access completely","Only allow admin accounts"],
+    "answerIndex":1,
+    "rationale":"Users should have only the minimum access necessary to perform their job functions.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Hotel keycard only opens your room and common areas—not the penthouse or basement."},
+      {"mode":"picture","text":"User sits at center with small circle of needed access, not entire network."},
+      {"mode":"steps","text":"1) Define job role. 2) List required resources. 3) Grant minimum access. 4) Review regularly."},
+      {"mode":"story","text":"Intern gets file access but not payroll system; breach damage limited."},
+      {"mode":"table","text":"Role-based access: Developer=code repos; HR=employee files; Finance=accounting"},
+      {"mode":"cli","text":"chmod 644 file.txt (read for owner, limited for others)"}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q9","objectiveId":"ARC-201","domain":"Security Architecture",
+    "stem":"What is the primary purpose of network segmentation?",
+    "options":["Increase network speed","Limit attack spread and blast radius","Reduce hardware costs","Simplify management"],
+    "answerIndex":1,
+    "rationale":"Segmentation contains breaches and limits lateral movement by attackers.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Ship bulkheads: if one compartment floods, others stay dry."},
+      {"mode":"picture","text":"Network divided by firewalls into zones; breach in one doesn't affect others."},
+      {"mode":"steps","text":"1) Group similar assets. 2) Place barriers between groups. 3) Control traffic flow. 4) Monitor boundaries."},
+      {"mode":"story","text":"Malware hits marketing PCs but can't reach finance servers due to VLAN separation."},
+      {"mode":"table","text":"Zones: Guest WiFi, Employee LAN, Server DMZ, Admin network"},
+      {"mode":"cli","text":"VLAN configuration and firewall rules"}
+    ],
+    "difficulty":2
+  },
+  {
+    "id":"Q10","objectiveId":"OPS-320","domain":"Security Operations",
+    "stem":"What is the correct incident response phase order?",
+    "options":["Containment, Preparation, Detection, Recovery","Preparation, Detection, Containment, Recovery","Detection, Preparation, Recovery, Containment","Recovery, Detection, Preparation, Containment"],
+    "answerIndex":1,
+    "rationale":"NIST framework: Prepare first, then Detect, Contain, and Recover from incidents.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Fire response: install alarms (prep), hear alarm (detect), close doors (contain), rebuild (recover)."},
+      {"mode":"picture","text":"Circular process with arrows: Prep → Detect → Contain → Recover → back to Prep."},
+      {"mode":"steps","text":"1) Build IR team/plans. 2) Monitor for incidents. 3) Isolate threats. 4) Restore operations."},
+      {"mode":"story","text":"SOC preps playbooks, spots anomaly, isolates infected host, restores from backup."},
+      {"mode":"table","text":"Phase goals: Prep=readiness; Detect=awareness; Contain=limit; Recover=restore"},
+      {"mode":"cli","text":"Playbook automation and forensic tools"}
+    ],
+    "difficulty":2
+  },
+  {
+    "id":"Q11","objectiveId":"CRY-150","domain":"Cryptography",
+    "stem":"What is the main difference between symmetric and asymmetric encryption?",
+    "options":["Speed of encryption","Symmetric uses one key, asymmetric uses two","Symmetric is more secure","Asymmetric can't be broken"],
+    "answerIndex":1,
+    "rationale":"Symmetric encryption uses one shared key, while asymmetric uses a public/private key pair.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Symmetric: shared house key. Asymmetric: mailbox (public) with private retrieval key."},
+      {"mode":"picture","text":"Symmetric: A ↔ B with one key. Asymmetric: A → B's public key, B uses private key."},
+      {"mode":"steps","text":"1) Symmetric: same key encrypts/decrypts. 2) Asymmetric: public key encrypts, private decrypts."},
+      {"mode":"story","text":"Alice uses Bob's public key to encrypt, only Bob's private key can decrypt."},
+      {"mode":"table","text":"Symmetric=fast, shared secret; Asymmetric=slow, key exchange"},
+      {"mode":"cli","text":"AES (symmetric) vs RSA (asymmetric) commands"}
+    ],
+    "difficulty":2
+  },
+  {
+    "id":"Q12","objectiveId":"GRC-110","domain":"GRC",
+    "stem":"What is the primary purpose of a security policy?",
+    "options":["Provide step-by-step procedures","Set high-level security intentions and goals","List technical configurations","Define user passwords"],
+    "answerIndex":1,
+    "rationale":"Policies establish organizational intent and goals, while standards and procedures provide specifics.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Constitution (policy) sets principles; laws (standards) set rules; regulations (procedures) set steps."},
+      {"mode":"picture","text":"Policy umbrella covers standards and procedures underneath."},
+      {"mode":"steps","text":"1) Board approves policy. 2) Standards implement requirements. 3) Procedures detail tasks."},
+      {"mode":"story","text":"CEO signs data protection policy; IT creates standards; staff follows procedures."},
+      {"mode":"table","text":"Policy=why/what; Standards=specifications; Procedures=how"},
+      {"mode":"cli","text":"N/A - governance concept"}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q13","objectiveId":"GEN-101","domain":"General Security Concepts",
+    "stem":"Which type of control is a firewall?",
+    "options":["Detective","Preventive","Corrective","Compensating"],
+    "answerIndex":1,
+    "rationale":"Firewalls prevent unauthorized traffic from passing through network boundaries.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Nightclub bouncer: prevents wrong people from entering (not just catching them inside)."},
+      {"mode":"picture","text":"Traffic flows toward firewall; bad packets blocked before entering network."},
+      {"mode":"steps","text":"1) Examine packet headers. 2) Check against rules. 3) Allow or block. 4) Log action."},
+      {"mode":"story","text":"Malicious traffic hits firewall rule; gets dropped before reaching servers."},
+      {"mode":"table","text":"Preventive=firewalls, locks; Detective=cameras, logs; Corrective=patches"},
+      {"mode":"cli","text":"iptables rules or pfSense configuration"}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q14","objectiveId":"IAM-210","domain":"Identity & Access",
+    "stem":"What authentication factor is a fingerprint?",
+    "options":["Something you know","Something you have","Something you are","Somewhere you are"],
+    "answerIndex":2,
+    "rationale":"Biometric factors like fingerprints represent 'something you are' - inherent characteristics.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Password = thing you remember; phone = thing you carry; fingerprint = part of you."},
+      {"mode":"picture","text":"Three categories: Brain (knowledge), Pocket (possession), Body (inherence)."},
+      {"mode":"steps","text":"1) Know: passwords, PINs. 2) Have: tokens, phones. 3) Are: biometrics, DNA."},
+      {"mode":"story","text":"User enters password (know), gets phone code (have), scans finger (are) for MFA."},
+      {"mode":"table","text":"Factor 1=knowledge; Factor 2=possession; Factor 3=inherence"},
+      {"mode":"cli","text":"N/A - hardware/biometric concept"}
+    ],
+    "difficulty":1
+  },
+  {
+    "id":"Q15","objectiveId":"ARC-201","domain":"Security Architecture",
+    "stem":"What is defense in depth?",
+    "options":["Using only one strong security control","Layering multiple security controls","Focusing only on perimeter security","Relying on user training alone"],
+    "answerIndex":1,
+    "rationale":"Defense in depth uses multiple overlapping security controls to protect against various attack vectors.",
+    "altExplanations":[
+      {"mode":"analogy","text":"Medieval castle: moat, walls, gates, guards, keep - multiple barriers, not just one."},
+      {"mode":"picture","text":"Concentric circles of protection: perimeter, network, host, application, data."},
+      {"mode":"steps","text":"1) Identify assets. 2) Map threat paths. 3) Layer controls. 4) Address single points of failure."},
+      {"mode":"story","text":"Attacker bypasses firewall but hits IDS, avoids IDS but hits endpoint protection."},
+      {"mode":"table","text":"Layers: Physical, Network, Host, Application, Data, User"},
+      {"mode":"cli","text":"Multiple security tools working together"}
+    ],
+    "difficulty":2
+  }
+]

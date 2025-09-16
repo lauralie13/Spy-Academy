@@ -1,0 +1,8 @@
+[
+  {"id":"GEN-101","domain":"General Security Concepts","title":"CIA triad & risk basics","weight":2,"status":"unseen","nextDue":"","mastery":0},
+  {"id":"ARC-201","domain":"Security Architecture","title":"Network segmentation & zones","weight":3,"status":"unseen","nextDue":"","mastery":0},
+  {"id":"IAM-210","domain":"Identity & Access","title":"AuthN vs AuthZ, MFA, Roles","weight":3,"status":"unseen","nextDue":"","mastery":0},
+  {"id":"OPS-320","domain":"Security Operations","title":"Logs, anomalies, IR phases","weight":3,"status":"unseen","nextDue":"","mastery":0},
+  {"id":"CRY-150","domain":"Cryptography","title":"Hashing vs encryption vs encoding","weight":2,"status":"unseen","nextDue":"","mastery":0},
+  {"id":"GRC-110","domain":"GRC","title":"Policies, standards, procedures","weight":2,"status":"unseen","nextDue":"","mastery":0}
+]
