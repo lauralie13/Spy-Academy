@@ -4,6 +4,7 @@
     "title": "Phantom Inbox",
     "type": "log-hunt",
     "targetDomain": "Ops & Incident Response",
+    "difficulty": "Beginner",
     "lore": "Partner NGO reports suspicious logins at dawn. You're on console.",
     "objectives": ["OPS-320", "IAM-210"],
     "tasks": {
@@ -12,8 +13,8 @@
       "answer": 3,
       "mitigationOptions": ["Disable SSH", "Set lockout & require keys", "Ignore", "Change server timezone"],
       "mitigationIndex": 1,
-      "minWords": 150,
-      "maxWords": 220
+      "minWords": 80,
+      "maxWords": 200
     },
     "unlocks": ["M2"]
   },
@@ -22,6 +23,7 @@
     "title": "Air-Gap Alley",
     "type": "zone-builder",
     "targetDomain": "Architecture & Design",
+    "difficulty": "Beginner",
     "lore": "Design a safe corridor between the street and the vault.",
     "objectives": ["ARC-201", "GRC-110"],
     "tasks": {
@@ -34,6 +36,82 @@
         { "name": "Public Users", "correctZone": "Public", "controlHint": "No internal access" }
       ]
     },
-    "unlocks": []
+    "unlocks": ["M3"]
+  },
+  {
+    "id": "M3",
+    "title": "Forged Face",
+    "type": "dialogue",
+    "targetDomain": "Identity & Access Management",
+    "difficulty": "Beginner",
+    "lore": "An impostor works the phones to social-engineer their way in.",
+    "objectives": ["IAM-110", "SOC-101"],
+    "tasks": {
+      "steps": [
+        {
+          "speaker": "Caller",
+          "text": "Hi, this is Alex from Finance—my MFA is broken and payroll’s due in 10. Can you just read me the backup code?",
+          "options": [
+            { "label": "Ask for employee ID + manager name; offer to call back via directory.", "score": 2, "note": "Verify on trusted channel." },
+            { "label": "Read the code—seems urgent.", "score": -2, "note": "Never disclose secrets." }
+          ]
+        },
+        {
+          "speaker": "You",
+          "text": "You reach the real manager. They say Alex is out on leave.",
+          "options": [
+            { "label": "Escalate to SecOps and log the attempt.", "score": 2, "note": "Documentation + escalation." },
+            { "label": "Hang up and move on.", "score": -1, "note": "Missed escalation path." }
+          ]
+        },
+        {
+          "speaker": "Debrief",
+          "text": "Which challenge question is MOST effective?",
+          "options": [
+            { "label": "What color is your badge?", "score": 0, "note": "Guessable." },
+            { "label": "Name your last approved expense and date.", "score": 2, "note": "Harder to fake; verifiable." }
+          ]
+        }
+      ],
+      "passScore": 3,
+      "artifact": "Red-Flag Checklist"
+    },
+    "unlocks": ["M10"]
+  },
+  {
+    "id": "M4",
+    "title": "Echo Chamber",
+    "type": "detector",
+    "targetDomain": "Security Operations",
+    "difficulty": "Intermediate",
+    "lore": "Mirror accounts spike at midnight—find the bots.",
+    "objectives": ["SOC-220", "SCRIPT-201"],
+    "tasks": {
+      "datasetCsv": "user,posts,likes,follows\nalice,4,3,2\nbot_1,50,0,0\nbob,5,6,3\nbot_2,44,1,0\ncharlie,6,10,5\n",
+      "thresholdField": "posts",
+      "defaultThreshold": 20,
+      "explain": "Accounts posting over the threshold with near-zero engagement look automated.",
+      "artifact": "Anomaly detector rule"
+    },
+    "unlocks": ["M7"]
+  },
+  {
+    "id": "M10",
+    "title": "Catch Me If You Can",
+    "type": "phishing-forensics",
+    "targetDomain": "Threats, Attacks & Vulns",
+    "difficulty": "Beginner → Intermediate",
+    "lore": "An exec receives an urgent wire request—headers look off.",
+    "objectives": ["TAV-130", "EMAIL-101"],
+    "tasks": {
+      "headers": "Received: from mail.example.com (HELO relay)\nFrom: CFO <cfo@examp1e.com>\nTo: ceo@company.com\nSubject: URGENT: Wire\nSPF: fail\nDKIM: none\n",
+      "questions": [
+        { "prompt": "Is SPF passing?", "answer": "no" },
+        { "prompt": "Is DKIM present?", "answer": "no" }
+      ],
+      "explain": "SPF fail + lookalike domain examp1e.com (digit 1) are red flags.",
+      "artifact": "Forensic email summary"
+    },
+    "unlocks": ["M4"]
   }
 ]
