@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { ArrowLeft, Play, BookOpen, CheckCircle, Clock } from 'lucide-react';
 import { useGameStore } from '@/store/useGameStore';
 import StatsBar from '@/components/StatsBar';
+import { getLessons, type Lesson } from '@/lib/content';
 
 export default function AcademyPage() {
   const router = useRouter();
@@ -54,6 +56,16 @@ export default function AcademyPage() {
 
   const domains = Array.from(new Set(objectives.map(obj => obj.domain)));
 
+  // --- Lessons KB (from data/lessons.json) ---
+  const lessons = useMemo(() => getLessons(), []);
+  const lessonsByDomain = useMemo(() => {
+    return lessons.reduce((acc: Record<string, Lesson[]>, l) => {
+      (acc[l.domain] ||= []).push(l);
+      return acc;
+    }, {} as Record<string, Lesson[]>);
+  }, [lessons]);
+  const lessonDomains = useMemo(() => Object.keys(lessonsByDomain).sort(), [lessonsByDomain]);
+
   return (
     <div className={`min-h-screen p-4 ${dyslexiaMode ? 'dyslexia-font' : ''} ${reduceMotion ? 'reduce-motion' : ''}`}>
       <div className="max-w-6xl mx-auto">
@@ -90,6 +102,43 @@ export default function AcademyPage() {
             </div>
           </div>
         )}
+
+        {/* --- Security+ Lessons (Knowledge Base) --- */}
+        <section className="mt-8">
+          <h2 className="text-2xl font-semibold text-slate-200 mb-2">Security+ Lessons</h2>
+          <p className="text-slate-400 text-sm mb-4">
+            Start with your weakest domain from placement, or browse topics below.
+          </p>
+          {lessonDomains.length === 0 ? (
+            <div className="text-slate-400">No lessons yet.</div>
+          ) : (
+            <div className="space-y-6">
+              {lessonDomains.map((d) => (
+                <div key={d} className="border border-slate-700/50 rounded-xl p-4 bg-slate-900/40">
+                  <h3 className="text-lg font-semibold text-slate-100 mb-2">{d}</h3>
+                  <ul className="space-y-2">
+                    {lessonsByDomain[d].map((l) => (
+                      <li key={l.id} className="flex items-center justify-between">
+                        <div>
+                          <p className="text-slate-200">{l.title}</p>
+                          {l.objectiveIds && (
+                            <p className="text-slate-400 text-xs">Objectives: {l.objectiveIds.join(', ')}</p>
+                          )}
+                        </div>
+                        <Link
+                          href={`/academy/${l.id}`}
+                          className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-sm"
+                        >
+                          Study
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
 
         {domains.map(domain => {
           const domainObjectives = objectives.filter(obj => obj.domain === domain);
