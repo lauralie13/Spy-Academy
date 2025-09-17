@@ -71,3 +71,18 @@ const missions: Mission[] = missionsJson as Mission[];
 export const getObjectives = (): Objective[] => objectives;
 export const getQuestions = (): Question[] => questions;
 export const getMissions = (): Mission[] => missions;
+import lessonsJson from "@/data/lessons.json"; // NEW
+
+export interface Lesson {
+  id: string;
+  domain: string;
+  title: string;
+  objectiveIds?: string[];
+  body: string; // plain text with \n\n breaks
+}
+
+const lessons = (lessonsJson as unknown) as Lesson[];
+
+export const getLessons = (): Lesson[] => lessons;
+export const getLesson = (id: string): Lesson | undefined =>
+  lessons.find(l => l.id === id);
