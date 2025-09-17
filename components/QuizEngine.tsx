@@ -5,23 +5,27 @@ import { type Question } from "@/lib/content";
 import { CheckCircle, XCircle, HelpCircle } from "lucide-react";
 import ExplanationSwitcher from "./ExplanationSwitcher";
 
--interface QuizEngineProps {
-+interface QuizEngineProps {
-   question: Question;
-   onAnswer: (correct: boolean, confidence: number) => void;
--  onNext: () => void;                          // NEW: parent controls advancing
-+  onNext?: () => void;                         // OPTIONAL: only in flows that need it
-   showResult?: boolean;
-   userAnswer?: number;
- }
+interface QuizEngineProps {
+  question: Question;
+  onAnswer: (correct: boolean, confidence: number) => void;
+  onNext?: () => void;            // optional: only provided in flows that need "Next"
+  showResult?: boolean;
+  userAnswer?: number;
+}
 
-export default function QuizEngine({ question, onAnswer, onNext, showResult, userAnswer }: QuizEngineProps) {
+export default function QuizEngine({
+  question,
+  onAnswer,
+  onNext,
+  showResult,
+  userAnswer,
+}: QuizEngineProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(userAnswer ?? null);
   const [confidence, setConfidence] = useState(50);
   const [isGuessing, setIsGuessing] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(showResult || false);
 
-  // CRITICAL: reset local state whenever we get a new question
+  // Reset local state whenever the question changes
   useEffect(() => {
     setSelectedAnswer(userAnswer ?? null);
     setConfidence(50);
@@ -152,14 +156,17 @@ export default function QuizEngine({ question, onAnswer, onNext, showResult, use
             />
           )}
 
-          <div className="pt-2">
-            <button
-              onClick={onNext}
-              className="w-full py-3 px-6 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
-            >
-              Next
-            </button>
-          </div>
+          {/* Only show Next if parent provided it */}
+          {onNext && (
+            <div className="pt-2">
+              <button
+                onClick={onNext}
+                className="w-full py-3 px-6 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
