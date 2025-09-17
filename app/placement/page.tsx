@@ -65,11 +65,11 @@ export default function PlacementPage() {
 
   const recommendedDomain = domainStats?.[0]?.domain ?? null;
 
-  // Pick a recommended mission if we have missions
+  // Pick a recommended mission if we have missions (simple seed for now)
   const missions = getMissions();
-  const recommendedMission = missions[0] ?? null; // simple seed choice for now
+  const recommendedMission = missions[0] ?? null;
 
-  // Persist results for your own review
+  // Persist results for your own review — LAST RUN + HISTORY (new)
   useEffect(() => {
     if (!done) return;
     const payload = {
@@ -78,7 +78,13 @@ export default function PlacementPage() {
       domainStats,
     };
     try {
+      // last run
       localStorage.setItem("placement:last", JSON.stringify(payload));
+      // history (newest first, keep last 10)
+      const raw = localStorage.getItem("placement:history");
+      const arr = raw ? JSON.parse(raw) : [];
+      arr.unshift(payload);
+      localStorage.setItem("placement:history", JSON.stringify(arr.slice(0, 10)));
     } catch {}
   }, [done, results, domainStats]);
 
