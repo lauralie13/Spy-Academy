@@ -5,13 +5,15 @@ import { type Question } from "@/lib/content";
 import { CheckCircle, XCircle, HelpCircle } from "lucide-react";
 import ExplanationSwitcher from "./ExplanationSwitcher";
 
-interface QuizEngineProps {
-  question: Question;
-  onAnswer: (correct: boolean, confidence: number) => void;
-  onNext: () => void;                          // NEW: parent controls advancing
-  showResult?: boolean;
-  userAnswer?: number;
-}
+-interface QuizEngineProps {
++interface QuizEngineProps {
+   question: Question;
+   onAnswer: (correct: boolean, confidence: number) => void;
+-  onNext: () => void;                          // NEW: parent controls advancing
++  onNext?: () => void;                         // OPTIONAL: only in flows that need it
+   showResult?: boolean;
+   userAnswer?: number;
+ }
 
 export default function QuizEngine({ question, onAnswer, onNext, showResult, userAnswer }: QuizEngineProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(userAnswer ?? null);
