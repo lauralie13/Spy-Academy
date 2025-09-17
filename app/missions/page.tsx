@@ -1,89 +1,87 @@
-'use client';
+"use client";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { getMissions } from "@/lib/content";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import { useGameStore } from '@/store/useGameStore';
-import MissionCard from '@/components/MissionCard';
-import StatsBar from '@/components/StatsBar';
+type DomainRow = { domain: string; correct: number; total: number; acc: number; avgConf: number };
+type PlacementPayload = { when: string; results: any[]; domainStats: DomainRow[] };
+
+function getLastPlacement(): PlacementPayload | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const s = localStorage.getItem("placement:last");
+    return s ? JSON.parse(s) : null;
+  } catch {
+    return null;
+  }
+}
 
 export default function MissionsPage() {
-  const router = useRouter();
-  const { 
-    initializeData, 
-    missions, 
-    ethicsAccepted,
-    getCompletedMissions,
-    dyslexiaMode,
-    reduceMotion 
-  } = useGameStore();
-
-  const completedMissions = getCompletedMissions();
+  const missions = getMissions();
+  const [last, setLast] = useState<PlacementPayload | null>(null);
 
   useEffect(() => {
-    initializeData();
-  }, [initializeData]);
+    setLast(getLastPlacement());
+  }, []);
 
-  const isMissionUnlocked = (mission: any) => {
-    if (mission.unlocks.length === 0) return true; // No prerequisites
-    return mission.unlocks.every((reqId: string) => 
-      completedMissions.includes(reqId)
-    );
-  };
+  const weakest = useMemo(() => last?.domainStats?.[0]?.domain ?? null, [last]);
 
-  const handleMissionClick = (missionId: string) => {
-    if (!ethicsAccepted) {
-      router.push('/legal/ethics-gate?return=/mission/' + missionId);
-    } else {
-      router.push('/mission/' + missionId);
-    }
-  };
+  function isUnlocked(m: any): boolean {
+    if (!last?.domainStats) return true; // no placement yet → let them explore
+    const row = last.domainStats.find((r) => r.domain === (m.targetDomain || r.domain));
+    if (!row) return true; // unknown mapping → don’t block
+    if (row.acc >= 0.5) return true; // at least 50% there → unlocked
+    if (weakest && m.targetDomain && m.targetDomain === weakest) return true; // recommended path
+    return false; // otherwise locked
+  }
 
   return (
-    <div className={`min-h-screen p-4 ${dyslexiaMode ? 'dyslexia-font' : ''} ${reduceMotion ? 'reduce-motion' : ''}`}>
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={() => router.push('/')}
-            className="flex items-center space-x-2 text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Home</span>
-          </button>
-          
-          <h1 className="text-3xl font-bold text-orange-300">Mission Operations</h1>
-        </div>
+    <div className="max-w-4xl mx-auto">
+      <h1 className="text-2xl font-semibold text-slate-100">Missions</h1>
+      {last?.when ? (
+        <p className="text-slate-400 text-sm mt-1">
+          Based on placement: <span className="text-slate-300">{new Date(last.when).toLocaleString()}</span>
+        </p>
+      ) : (
+        <p className="text-slate-400 text-sm mt-1">Tip: take the placement test to get tailored unlocks.</p>
+      )}
 
-        <StatsBar />
-
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-slate-200 mb-4">Available Missions</h2>
-          <p className="text-slate-400 mb-6">
-            Apply your Security+ knowledge in realistic scenarios. Complete missions to unlock advanced operations.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {missions.map(mission => (
-            <MissionCard
-              key={mission.id}
-              mission={mission}
-              isLocked={!isMissionUnlocked(mission)}
-              isCompleted={completedMissions.includes(mission.id)}
-              onClick={() => isMissionUnlocked(mission) && handleMissionClick(mission.id)}
-            />
-          ))}
-        </div>
-
-        {missions.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-6xl text-slate-600 mb-4">🎯</div>
-            <h3 className="text-xl font-semibold text-slate-400 mb-2">No missions available</h3>
-            <p className="text-slate-500">
-              Missions are loading or not yet unlocked.
-            </p>
-          </div>
-        )}
+      <div className="mt-6 grid sm:grid-cols-2 gap-4">
+        {missions.map((m) => {
+          const unlocked = isUnlocked(m);
+          return (
+            <div key={m.id} className="relative border border-slate-800 rounded-xl p-4 bg-slate-900/40">
+              {!unlocked && (
+                <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm rounded-xl grid place-items-center">
+                  <span className="text-slate-300 text-sm">Locked — train this domain in Academy</span>
+                </div>
+              )}
+              <h2 className="text-lg font-semibold text-slate-100">{m.title}</h2>
+              {m.targetDomain && (
+                <p className="text-slate-400 text-xs mt-1">Focus: {m.targetDomain}</p>
+              )}
+              <p className="text-slate-300 mt-2 line-clamp-3">{m.lore}</p>
+              <div className="mt-4 flex gap-2">
+                <Link
+                  href={`/missions/${m.id}`}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
+                    unlocked ? "bg-emerald-600 hover:bg-emerald-500 text-white" : "bg-slate-800 text-slate-400 border border-slate-700 pointer-events-none"
+                  }`}
+                >
+                  {unlocked ? "Start mission" : "Locked"}
+                </Link>
+                {m.targetDomain && (
+                  <Link
+                    href="/academy"
+                    className="px-3 py-1.5 rounded-lg text-sm font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700"
+                  >
+                    Train in Academy
+                  </Link>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
