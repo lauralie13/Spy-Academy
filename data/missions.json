@@ -1,37 +1,39 @@
 [
   {
-    "id":"M1",
-    "title":"Phantom Inbox",
-    "type":"log-hunt",
-    "lore":"Partner NGO reports suspicious logins at dawn. You're on console.",
-    "objectives":["OPS-320","IAM-210"],
-    "tasks":{
-      "logText":"Jan 12 05:41:01 server sshd[1023]: Failed password for invalid user admin from 203.0.113.7 port 42218 ssh2\nJan 12 05:41:03 server sshd[1025]: Failed password for invalid user guest from 203.0.113.7 port 42219 ssh2\nJan 12 05:41:05 server sshd[1027]: Failed password for root from 203.0.113.7 port 42220 ssh2\nJan 12 05:41:08 server sshd[1030]: Accepted publickey for analyst from 198.51.100.9 port 51821 ssh2",
-      "question":"How many failed SSH attempts from a single IP do you see?",
-      "answer":3,
-      "mitigationOptions":["Disable SSH","Set lockout & require keys","Ignore","Change server timezone"],
-      "mitigationIndex":1,
-      "minWords":150,
-      "maxWords":220
+    "id": "M1",
+    "title": "Phantom Inbox",
+    "type": "log-hunt",
+    "targetDomain": "Ops & Incident Response",
+    "lore": "Partner NGO reports suspicious logins at dawn. You're on console.",
+    "objectives": ["OPS-320", "IAM-210"],
+    "tasks": {
+      "logText": "Jan 12 05:41:01 server sshd[1023]: Failed password for invalid user admin from 203.0.113.7 port 42218 ssh2\nJan 12 05:41:03 server sshd[1025]: Failed password for invalid user guest from 203.0.113.7 port 42219 ssh2\nJan 12 05:41:05 server sshd[1027]: Failed password for root from 203.0.113.7 port 42220 ssh2\nJan 12 05:41:08 server sshd[1030]: Accepted publickey for analyst from 198.51.100.9 port 51821 ssh2",
+      "question": "How many failed SSH attempts from a single IP do you see?",
+      "answer": 3,
+      "mitigationOptions": ["Disable SSH", "Set lockout & require keys", "Ignore", "Change server timezone"],
+      "mitigationIndex": 1,
+      "minWords": 150,
+      "maxWords": 220
     },
-    "unlocks":["M2"]
+    "unlocks": ["M2"]
   },
   {
-    "id":"M2",
-    "title":"Air-Gap Alley",
-    "type":"zone-builder",
-    "lore":"Design a safe corridor between the street and the vault.",
-    "objectives":["ARC-201","GRC-110"],
-    "tasks":{
-      "zones":["Public","DMZ","Internal","Restricted"],
-      "assets":[
-        {"name":"Public Web","correctZone":"DMZ","controlHint":"Firewall inbound 80/443; WAF optional"},
-        {"name":"DB Server","correctZone":"Internal","controlHint":"Only allow from app tier; no internet"},
-        {"name":"Jump Host","correctZone":"Restricted","controlHint":"MFA + admin-only; one-way"},
-        {"name":"Admin Workstation","correctZone":"Internal","controlHint":"MFA; least privilege"},
-        {"name":"Public Users","correctZone":"Public","controlHint":"No internal access"}
+    "id": "M2",
+    "title": "Air-Gap Alley",
+    "type": "zone-builder",
+    "targetDomain": "Architecture & Design",
+    "lore": "Design a safe corridor between the street and the vault.",
+    "objectives": ["ARC-201", "GRC-110"],
+    "tasks": {
+      "zones": ["Public", "DMZ", "Internal", "Restricted"],
+      "assets": [
+        { "name": "Public Web", "correctZone": "DMZ", "controlHint": "Firewall inbound 80/443; WAF optional" },
+        { "name": "DB Server", "correctZone": "Internal", "controlHint": "Only allow from app tier; no internet" },
+        { "name": "Jump Host", "correctZone": "Restricted", "controlHint": "MFA + admin-only; one-way" },
+        { "name": "Admin Workstation", "correctZone": "Internal", "controlHint": "MFA; least privilege" },
+        { "name": "Public Users", "correctZone": "Public", "controlHint": "No internal access" }
       ]
     },
-    "unlocks":[]
+    "unlocks": []
   }
 ]
