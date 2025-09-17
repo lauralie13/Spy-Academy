@@ -1,0 +1,37 @@
+[
+  {
+    "id": "threats-101",
+    "domain": "Threats, Attacks & Vulns",
+    "title": "Threat Actors & Attack Types (101)",
+    "objectiveIds": ["obj-phishing", "obj-malware-basics"],
+    "body": "Who attacks? Script kiddies, insiders, organized crime, nation-states. Why? Profit, espionage, disruption. Common attacks: phishing (spear/whaling), credential stuffing, ransomware, DoS. \n\nKey terms: IOC, TTP, APT, watering hole, supply-chain attack. \n\nExam tip: Phishing ≠ Pharming; Ransomware ≠ Worm—know delivery vs. payload."
+  },
+  {
+    "id": "arch-101",
+    "domain": "Architecture & Design",
+    "title": "Secure Design Principles",
+    "objectiveIds": ["obj-least-priv", "obj-defense-in-depth"],
+    "body": "Principles: least privilege, defense-in-depth, secure defaults, fail-secure, separation of duties, zero trust. \n\nNetwork zones: DMZ, intranet, extranet. \n\nDesign patterns: microsegmentation, NAC, CASB, SDP."
+  },
+  {
+    "id": "impl-101",
+    "domain": "Implementation",
+    "title": "Crypto Primitives & Use Cases",
+    "objectiveIds": ["obj-symmetric", "obj-asymmetric", "obj-hash"],
+    "body": "Symmetric (AES, ChaCha20) = fast, bulk data. Asymmetric (RSA, ECC) = key exchange, signatures. Hashing (SHA-256) = integrity. \n\nTLS: uses asymmetric to agree on keys, then symmetric for data. \n\nDon’t confuse encoding, encryption, hashing."
+  },
+  {
+    "id": "ops-101",
+    "domain": "Ops & Incident Response",
+    "title": "IR Process & Evidence",
+    "objectiveIds": ["obj-ir-steps", "obj-chain-of-custody"],
+    "body": "NIST IR: Prep → Detect/Analyze → Contain → Eradicate → Recover → Lessons learned. \n\nEvidence: volatile first, preserve chain of custody, timestamps, hashes. \n\nUse runbooks & playbooks."
+  },
+  {
+    "id": "grc-101",
+    "domain": "Governance, Risk & Compliance",
+    "title": "Risk & Controls Basics",
+    "objectiveIds": ["obj-risk", "obj-controls"],
+    "body": "Risk = Likelihood × Impact. Treat: Avoid/Transfer/Mitigate/Accept. \n\nControls: Administrative, Technical, Physical; Preventive, Detective, Corrective. \n\nFrameworks: NIST CSF, ISO 27001."
+  }
+]
