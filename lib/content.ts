@@ -44,24 +44,28 @@ export interface Mission {
 
 // ---- Coercion helpers ----
 const STATUS_SET = new Set<Status>(["unseen", "learning", "mastered"]);
-type RawObjective = Omit<Objective, "status"> & { status: string | undefined };
 
-function coerceObjective(raw: RawObjective): Objective {
-  const status = STATUS_SET.has((raw.status ?? "").toLowerCase() as Status)
-    ? ((raw.status ?? "").toLowerCase() as Status)
+function coerceObjective(raw: any): Objective {
+  const status = STATUS_SET.has(raw.status?.toLowerCase())
+    ? (raw.status.toLowerCase() as Status)
     : "unseen";
+  
   return {
-    ...raw,
+    id: raw.id || "",
+    domain: raw.domain || "",
+    title: raw.title || "",
+    weight: raw.weight || 1,
     status,
-    nextDue: raw.nextDue ?? "",
-    mastery: raw.mastery ?? 0,
+    nextDue: raw.nextDue || "",
+    mastery: raw.mastery || 0,
+    misconception: raw.misconception || false,
   };
 }
 
 // ---- Load + coerce + type the arrays ----
-const objectives: Objective[] = ((objectivesJson as unknown) as RawObjective[]).map(coerceObjective);
-const questions: Question[] = (questionsJson as unknown) as Question[];
-const missions: Mission[] = (missionsJson as unknown) as Mission[];
+const objectives: Objective[] = (objectivesJson as any[]).map(coerceObjective);
+const questions: Question[] = questionsJson as Question[];
+const missions: Mission[] = missionsJson as Mission[];
 
 // ---- Exported getters ----
 export const getObjectives = (): Objective[] => objectives;

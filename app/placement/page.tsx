@@ -9,6 +9,57 @@ import { getQuestions } from '@/lib/content';
 import QuizEngine from '@/components/QuizEngine';
 import HeatmapProgress from '@/components/HeatmapProgress';
 
+// Simple domain results component
+function DomainResults({ results }: { results: { questionId: string; correct: boolean; confidence: number; }[] }) {
+  const questions = getQuestions();
+  const domains = Array.from(new Set(questions.map(q => q.domain)));
+  
+  const domainStats = domains.map(domain => {
+    const domainQuestions = questions.filter(q => q.domain === domain);
+    const domainResults = results.filter(r => {
+      const question = questions.find(q => q.id === r.questionId);
+      return question?.domain === domain;
+    });
+    
+    const correct = domainResults.filter(r => r.correct).length;
+    const total = domainResults.length;
+    const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
+    
+    return { domain, correct, total, percentage };
+  });
+
+  return (
+    <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-6 mb-8">
+      <h3 className="text-xl font-semibold text-cyan-300 mb-4">Domain Performance</h3>
+      <div className="space-y-4">
+        {domainStats.map(stat => (
+          <div key={stat.domain} className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-200 text-sm font-medium">
+                {stat.domain.replace(/^(.*?) /, '')}
+              </span>
+              <span className="text-slate-400 text-sm">
+                {stat.correct}/{stat.total} ({stat.percentage}%)
+              </span>
+            </div>
+            <div className="w-full bg-slate-800 rounded-full h-2">
+              <div
+                className={`h-2 rounded-full transition-all duration-500 ${
+                  stat.percentage >= 80 ? 'bg-emerald-500' :
+                  stat.percentage >= 60 ? 'bg-cyan-500' :
+                  stat.percentage >= 40 ? 'bg-yellow-500' :
+                  stat.percentage >= 20 ? 'bg-orange-500' : 'bg-red-500'
+                }`}
+                style={{ width: `${stat.percentage}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function PlacementPage() {
   const router = useRouter();
   const { initializeData, updateQuestionResult, dyslexiaMode, reduceMotion } = useGameStore();
@@ -73,6 +124,8 @@ export default function PlacementPage() {
               Your personalized learning path has been generated based on your performance.
             </p>
           </div>
+
+          <DomainResults results={results} />
 
           <HeatmapProgress domainProfiles={domainProfiles} />
 

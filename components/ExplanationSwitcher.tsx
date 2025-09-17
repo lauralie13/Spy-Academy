@@ -8,7 +8,7 @@ export interface Explanation {
 }
 
 interface Props {
-  explanations?: Explanation[];         // optional
+  explanations?: Explanation[];
   initialRationale: string;
 }
 
@@ -18,7 +18,7 @@ const btnSecondary =
   `${btnBase} bg-slate-800 hover:bg-slate-700 text-slate-100 border-slate-600`;
 
 export default function ExplanationSwitcher({ explanations, initialRationale }: Props) {
-  const exps = Array.isArray(explanations) ? explanations : [];
+  const exps = explanations || [];
 
   // If there are no alternates, render nothing (rationale already shown above)
   if (exps.length === 0) return null;

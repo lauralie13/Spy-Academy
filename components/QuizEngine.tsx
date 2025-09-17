@@ -135,9 +135,12 @@ export default function QuizEngine({ question, onAnswer, showResult, userAnswer 
             </div>
           </div>
 
- {(question.altExplanations && question.altExplanations.length > 0) && (
-  <ExplanationSwitcher
-    explanations={question.altExplanations ?? []}
-    initialRationale={question.rationale}
-  />
-)}
+          <ExplanationSwitcher
+            explanations={question.altExplanations || []}
+            initialRationale={question.rationale}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
