@@ -15,13 +15,14 @@ const btnSecondary =
   `${btnBase} bg-slate-800 hover:bg-slate-700 text-slate-100 border-slate-600`;
 
 export default function ExplanationSwitcher({ explanations, initialRationale }: Props) {
-  // Ensure we always have a safe array
+  const [i, setI] = useState(0);  // <-- moved above the early return
+
   const exps = Array.isArray(explanations) ? explanations : [];
   if (exps.length === 0) return null; // nothing to show
 
-  const [i, setI] = useState(0);
   const current = exps[i % exps.length];
-
+  ...
+}
   return (
     <div className="rounded-lg border border-slate-700 bg-slate-800 p-4 mt-4">
       <div className="flex items-center justify-between">
