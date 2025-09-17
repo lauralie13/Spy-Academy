@@ -39,13 +39,14 @@ export interface Question {
 export interface Mission {
   id: string;
   title: string;
-  type: "log-hunt" | "zone-builder";
-  objectives: string[];
-  lore: string;
-  tasks: any;
-  unlocks: string[];
-  // NEW: optional so older JSON still type-checks
+  // add 'dialogue' so TypeScript knows it's valid
+  type: "log-hunt" | "zone-builder" | "dialogue";
+  // optional fields so old data still works
   targetDomain?: string;
+  lore?: string;
+  objectives?: string[];
+  tasks?: any;
+  unlocks?: string[];
 }
 
 export interface Lesson {
