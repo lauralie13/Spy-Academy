@@ -1,0 +1,48 @@
+import Link from "next/link";
+import { getLessons } from "@/lib/content";
+
+export default function AcademyPage() {
+  const lessons = getLessons();
+  const byDomain = lessons.reduce<Record<string, typeof lessons>>((acc, l) => {
+    (acc[l.domain] ||= []).push(l);
+    return acc;
+  }, {});
+  const domains = Object.keys(byDomain).sort();
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <h1 className="text-2xl font-semibold text-slate-100">Security Academy</h1>
+      <p className="text-slate-300 mt-2">
+        Start with your weakest domain from placement, or browse topics below.
+      </p>
+
+      <div className="mt-6 space-y-6">
+        {domains.map((d) => (
+          <div key={d} className="border border-slate-800 rounded-xl p-4 bg-slate-900/40">
+            <h2 className="text-lg font-semibold text-slate-100 mb-2">{d}</h2>
+            <ul className="space-y-2">
+              {byDomain[d].map((l) => (
+                <li key={l.id} className="flex items-center justify-between">
+                  <div>
+                    <p className="text-slate-200">{l.title}</p>
+                    {l.objectiveIds && (
+                      <p className="text-slate-400 text-xs">
+                        Objectives: {l.objectiveIds.join(", ")}
+                      </p>
+                    )}
+                  </div>
+                  <Link
+                    href={`/academy/${l.id}`}
+                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-sm"
+                  >
+                    Study
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
