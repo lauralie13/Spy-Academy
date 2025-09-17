@@ -101,7 +101,7 @@ export default function QuizEngine({ question, onAnswer, showResult, userAnswer 
               className="w-4 h-4 text-cyan-500 bg-slate-700 border-slate-600 rounded focus:ring-cyan-500"
             />
             <label htmlFor="guessing" className="text-sm text-slate-300">
-              I'm mostly guessing
+              I&apos;m mostly guessing
             </label>
             <HelpCircle className="w-4 h-4 text-slate-400" />
           </div>
